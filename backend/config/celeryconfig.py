@@ -1,4 +1,4 @@
-from .utils import get_config
+from utils import get_config
 
 CONFIG = get_config()
 

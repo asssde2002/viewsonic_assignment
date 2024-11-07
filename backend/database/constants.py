@@ -1,4 +1,4 @@
-from .utils import get_config
+from config.utils import get_config
 
 CONFIG = get_config()
 DATABASES = CONFIG["databases"]
