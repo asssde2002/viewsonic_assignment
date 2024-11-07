@@ -2,6 +2,7 @@ services:
   db:
     image: postgres:16
     volumes:
+      - ./backend/docker/db-init-script:/docker-entrypoint-initdb.d:cached
       - db_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=postgres
