@@ -3,13 +3,9 @@ services:
     image: postgres:16
     volumes:
       - db_data:/var/lib/postgresql/data
-    ports:
-      - 6432:6432
     environment:
-      - POSTGRES_NAME=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - PGPORT=6432
     
   web:
     build:
