@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres:16
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - 6432:6432
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - PGPORT=6432
+    
+  web:
+    build:
+      context: ./backend/
+      dockerfile: ./docker/Dockerfile
+    volumes:
+      - ./backend:/app
+    ports:
+      - 8000:8000
+    command: bash ./docker/run_web.sh
+    depends_on:
+      - db
+
+
+volumes:
+  db_data: {}

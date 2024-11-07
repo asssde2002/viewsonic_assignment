@@ -1,2 +1,2 @@
 fastapi[standard]==0.115.4
-gunicorn=23.0.0
+gunicorn==23.0.0
