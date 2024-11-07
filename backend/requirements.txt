@@ -1,2 +1,6 @@
 fastapi[standard]==0.115.4
 gunicorn==23.0.0
+sqlmodel==0.0.22
+psycopg2==2.9.10
+alembic==1.14.0
+celery[redis]==5.4.0
