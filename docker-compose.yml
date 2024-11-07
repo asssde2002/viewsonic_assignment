@@ -9,6 +9,7 @@ services:
       - POSTGRES_PASSWORD=postgres
     
   web:
+    image: viewsonic_web
     build:
       context: ./backend/
       dockerfile: ./docker/Dockerfile
@@ -19,7 +20,19 @@ services:
     command: bash ./docker/run_web.sh
     depends_on:
       - db
-
+      - rabbitmq
+  
+  rabbitmq:
+    hostname: management-alpine
+    image: rabbitmq:4.0.3-management-alpine
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_ERLANG_COOKIE=viewsonic
+      - RABBITMQ_DEFAULT_VHOST=/
+    ports:
+      - 15672:15672
+      # - 15692:15692
 
 volumes:
   db_data: {}
