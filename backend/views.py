@@ -9,6 +9,7 @@ from sqlmodel import Session, select
 
 from fastapi_restful.inferring_router import InferringRouter
 from database.utils import get_db
+from datetime import datetime
 
 task_router = InferringRouter()
 
@@ -25,7 +26,8 @@ class TaskViewSet:
     @task_router.post("/", status_code=201, response_model=TaskRecord)
     def create_task(self, taskrecord: Optional[TaskRecord] = None):
         task = sleep.delay()
-        taskrecord = TaskRecord(id=task.id)
+        now = datetime.utcnow()
+        taskrecord = TaskRecord(id=task.id, created_at=now, updated_at=now)
         self.session.add(taskrecord)
         self.session.commit()
         self.session.refresh(taskrecord)

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h3>Create Task</h3>
+        <button onclick="createTaskRequest()">Send Post Request</button>
+    </div>
+
+    <div class="container">
+        <h3>Delete Task</h3>
+        <input type="text" id="deleteInput" placeholder="Enter task_id to delete">
+        <button onclick="DeleteTaskRequest()">Send Delete Request</button>
+    </div>
+
+    <div class="container">
+        <h3>Task Status</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Task ID</th>
+                    <th>Status</th>
+                    <th>Created At</th>
+                    <th>Updated At</th>
+                </tr>
+            </thead>
+            <tbody id="taskTableBody"></tbody>
+        </table>
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+</html>

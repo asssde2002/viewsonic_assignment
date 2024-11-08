@@ -15,6 +15,7 @@ services:
       dockerfile: ./backend/docker/Dockerfile
     volumes:
       - ./backend:/app/backend
+      - ./frontend:/app/frontend
     ports:
       - 8000:8000
     command: bash ./backend/docker/run_web.sh
@@ -29,6 +30,7 @@ services:
       dockerfile: ./backend/docker/Dockerfile
     volumes:
       - ./backend:/app/backend
+      - ./frontend:/app/frontend
     command: bash ./backend/docker/run_worker.sh
     depends_on:
       - db
