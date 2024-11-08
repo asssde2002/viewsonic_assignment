@@ -10,7 +10,6 @@ from sqlmodel import Session, select
 
 from fastapi_restful.inferring_router import InferringRouter
 from database.utils import get_db
-from datetime import datetime
 
 task_router = InferringRouter()
 

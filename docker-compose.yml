@@ -46,7 +46,18 @@ services:
       - RABBITMQ_DEFAULT_VHOST=/
     ports:
       - 15672:15672
-      # - 15692:15692
+  
+  flower:
+    image: viewsonic_image
+    build:
+      context: .
+      dockerfile: ./backend/docker/Dockerfile
+    ports:
+      - 5555:5555
+    command: bash ./backend/docker/run_flower.sh
+    depends_on:
+      - db
+      - rabbitmq
 
 volumes:
   db_data: {}
