@@ -3,9 +3,10 @@ from fastapi import HTTPException, Depends
 from fastapi_restful.cbv import cbv
 from typing import List, Optional
 from models import TaskRecord, TaskStatus
-from tasks import sleep
+from tasks import do_something
 from utils import revoke_task
 from sqlmodel import Session, select
+
 
 from fastapi_restful.inferring_router import InferringRouter
 from database.utils import get_db
@@ -25,7 +26,7 @@ class TaskViewSet:
 
     @task_router.post("/", status_code=201, response_model=TaskRecord)
     def create_task(self, taskrecord: Optional[TaskRecord] = None):
-        task = sleep.delay()
+        task = do_something.delay()
         now = datetime.utcnow()
         taskrecord = TaskRecord(id=task.id, created_at=now, updated_at=now)
         self.session.add(taskrecord)
