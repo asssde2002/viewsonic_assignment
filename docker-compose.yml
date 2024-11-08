@@ -11,13 +11,13 @@ services:
   web:
     image: viewsonic_image
     build:
-      context: ./backend/
-      dockerfile: ./docker/Dockerfile
+      context: .
+      dockerfile: ./backend/docker/Dockerfile
     volumes:
-      - ./backend:/app
+      - ./backend:/app/backend
     ports:
       - 8000:8000
-    command: bash ./docker/run_web.sh
+    command: bash ./backend/docker/run_web.sh
     depends_on:
       - db
       - rabbitmq
@@ -25,11 +25,11 @@ services:
   worker:
     image: viewsonic_image
     build:
-      context: ./backend/
-      dockerfile: ./docker/Dockerfile
+      context: .
+      dockerfile: ./backend/docker/Dockerfile
     volumes:
-      - ./backend:/app
-    command: bash ./docker/run_worker.sh
+      - ./backend:/app/backend
+    command: bash ./backend/docker/run_worker.sh
     depends_on:
       - db
       - rabbitmq

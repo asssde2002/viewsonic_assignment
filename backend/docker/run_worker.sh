@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd backend
+
 # double check python dependencies
 pip install -r requirements.txt
 

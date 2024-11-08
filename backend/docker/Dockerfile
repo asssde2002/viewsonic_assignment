@@ -6,5 +6,7 @@ RUN apt-get update && apt-get install -y postgresql-client gcc netcat-traditiona
 
 WORKDIR /app
 
-COPY . .
-RUN pip install -r requirements.txt
+COPY ./backend /app/backend
+COPY ./frontend /app/frontend
+
+RUN pip install -r /app/backend/requirements.txt
