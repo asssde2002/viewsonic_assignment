@@ -20,7 +20,7 @@ class TaskViewSet:
 
     @task_router.get("/", response_model=List[TaskRecord])
     def get_tasks(self):
-        taskrecords = self.session.execute(select(TaskRecord)).scalars().all()
+        taskrecords = self.session.execute(select(TaskRecord).order_by(TaskRecord.created_at)).scalars().all()
         return taskrecords
 
     @task_router.post("/", status_code=201, response_model=TaskRecord)

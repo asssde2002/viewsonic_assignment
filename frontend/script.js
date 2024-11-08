@@ -12,7 +12,12 @@ async function DeleteTaskRequest() {
     const response = await fetch(`/tasks/${data}`, {
         method: 'DELETE',
     });
-    const result = await response.json();
+    if (response.ok) {
+        alert('Task deleted successfully.');
+    } else {
+        alert('Failed to delete task. Status: ' + response.status);
+    }
+    document.getElementById('deleteInput').value = '';
 }
 
 async function fetchTaskData() {

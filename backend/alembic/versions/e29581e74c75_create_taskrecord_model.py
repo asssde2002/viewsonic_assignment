@@ -1,8 +1,8 @@
-"""Create Task model
+"""Create TaskRecord Model
 
-Revision ID: 7d947929dd10
+Revision ID: e29581e74c75
 Revises: 
-Create Date: 2024-11-08 12:05:43.633110
+Create Date: 2024-11-08 13:00:10.007637
 
 """
 from typing import Sequence, Union
@@ -13,7 +13,7 @@ import sqlmodel
 
 
 # revision identifiers, used by Alembic.
-revision: str = '7d947929dd10'
+revision: str = 'e29581e74c75'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -24,8 +24,8 @@ def upgrade() -> None:
     op.create_table('taskrecord',
     sa.Column('id', sa.Uuid(), nullable=False),
     sa.Column('status', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('created_at', sa.DateTime(timezone=True), nullable=True),
-    sa.Column('updated_at', sa.DateTime(timezone=True), nullable=True),
+    sa.Column('created_at', sa.DateTime(timezone=True), nullable=False),
+    sa.Column('updated_at', sa.DateTime(timezone=True), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
