@@ -24,15 +24,9 @@ class TaskViewSet:
         taskrecords = self.session.execute(select(TaskRecord).order_by(TaskRecord.created_at)).scalars().all()
         return taskrecords
 
-    @task_router.post("/", status_code=201, response_model=TaskRecord)
+    @task_router.post("/", status_code=201)
     def create_task(self, taskrecord: Optional[TaskRecord] = None):
-        task = do_something.delay()
-        now = datetime.utcnow()
-        taskrecord = TaskRecord(id=task.id, created_at=now, updated_at=now)
-        self.session.add(taskrecord)
-        self.session.commit()
-        self.session.refresh(taskrecord)
-        return taskrecord
+        do_something.apply_async()
 
     @task_router.delete("/{task_id}", status_code=204)
     def delete_task(self, task_id: uuid.UUID):

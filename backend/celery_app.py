@@ -15,15 +15,11 @@ celery_app.conf.task_queues = [
 
 class BaseTask(celery_app.Task):
     def apply_async(self, *args, **kwargs):
-        # Create task record in DB before task is dispatched
-        task_id = self.id
-        db = next(get_db())
+        result = super().apply_async(*args, **kwargs)
+        task_id = result.id
+        session = next(get_db())
         now = datetime.utcnow()
         task_record = TaskRecord(id=task_id, status=TaskStatus.PENDING, created_at=now, updated_at=now)
-        db.add(task_record)
-        db.commit()
-        # task_id = task_record.id
-
-        # Add task_id to kwargs and pass it to apply_async
-        # kwargs['task_id'] = task_id
-        return super().apply_async(*args, **kwargs)
+        session.add(task_record)
+        session.commit()
+        return result
