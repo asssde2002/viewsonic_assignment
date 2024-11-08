@@ -21,7 +21,16 @@ h3 {
     border-radius: 10px;
 }
 
-input, button {
+.dashboard {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 1000;
+}
+
+input {
     width: 100%;
     padding: 10px;
     margin: 10px 0;
@@ -31,7 +40,13 @@ input, button {
 }
 
 button {
-    background-color: #4CAF50;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #145f16;
     color: white;
     cursor: pointer;
     font-size: 16px;
