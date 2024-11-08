@@ -36,7 +36,8 @@ class TaskViewSet:
         elif taskrecord.status in [TaskStatus.COMPLETED, TaskStatus.CANCELED]:
             raise HTTPException(status_code=400, detail=f"Task ({taskrecord.id}) cannot be canceled")
         
-        revoke_task(taskrecord.id)
+        revoke_task(str(taskrecord.id))
+        
         taskrecord.status = TaskStatus.CANCELED
         self.session.commit()
 
