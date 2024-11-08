@@ -8,5 +8,5 @@ PORT=$2
 while ! pg_isready -h $HOST -p $PORT
 do
     echo "$(date) - waiting for database to start"
-    sleep 5
+    sleep 3
 done
