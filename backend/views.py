@@ -2,8 +2,9 @@ import uuid
 from fastapi import HTTPException, Depends
 from fastapi_restful.cbv import cbv
 from typing import List, Optional
-from models import TaskRecord
+from models import TaskRecord, TaskStatus
 from tasks import sleep
+from utils import revoke_task
 from sqlmodel import Session, select
 
 from fastapi_restful.inferring_router import InferringRouter
@@ -35,10 +36,10 @@ class TaskViewSet:
         taskrecord = self.session.execute(select(TaskRecord).where(TaskRecord.id == task_id)).scalars().first()
         if taskrecord is None:
             raise HTTPException(status_code=404, detail=f"Task ({taskrecord.id}) is not found")
-        elif taskrecord.status == "completed":
-            raise HTTPException(status_code=400, detail=f"Task ({taskrecord.id}) has completed")
+        elif taskrecord.status in [TaskStatus.COMPLETED, TaskStatus.CANCELED]:
+            raise HTTPException(status_code=400, detail=f"Task ({taskrecord.id}) cannot be canceled")
         
-        taskrecord.status = "cancel"
+        revoke_task(taskrecord.id)
+        taskrecord.status = TaskStatus.CANCELED
         self.session.commit()
-        return taskrecord
 
