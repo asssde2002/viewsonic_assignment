@@ -1,8 +1,8 @@
-from sqlmodel import SQLModel, Field, Column, DateTime, update
+from sqlmodel import SQLModel, Field, Column, DateTime, update, Session
 import uuid
 from enum import Enum
 from datetime import datetime, timezone
-from database.utils import get_session, get_redis_client
+from database.utils import engine, get_redis_client
 
 
 class TaskStatus(str, Enum):
@@ -20,7 +20,7 @@ class TaskRecord(SQLModel, table=True):
 
     @staticmethod
     def update_status(task_id, status):
-        with get_session() as session:
+        with Session(engine) as session:
             session.execute(update(TaskRecord).where(TaskRecord.id == task_id).values(status=status))
             session.commit()
         TaskRecord.delete_list_task_records()
