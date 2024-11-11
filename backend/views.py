@@ -10,6 +10,8 @@ from sqlmodel import Session, select
 
 from fastapi_restful.inferring_router import InferringRouter
 from database.utils import get_session
+from decorators import RedisCachePollingAPI
+from controllers import ListTaskRecordCacheController
 
 task_router = InferringRouter()
 
@@ -19,6 +21,7 @@ class TaskViewSet:
     session: Session = Depends(get_session)
 
     @task_router.get("/", response_model=List[TaskRecord])
+    @RedisCachePollingAPI(controller_class=ListTaskRecordCacheController, timeout=60)
     def get_tasks(self):
         taskrecords = self.session.execute(select(TaskRecord).order_by(TaskRecord.created_at)).scalars().all()
         return taskrecords
@@ -35,8 +38,6 @@ class TaskViewSet:
         elif taskrecord.status in [TaskStatus.COMPLETED, TaskStatus.CANCELED]:
             raise HTTPException(status_code=400, detail=f"Task ({taskrecord.id}) cannot be canceled")
         
-        revoke_task(str(taskrecord.id))
-        
-        taskrecord.status = TaskStatus.CANCELED
-        self.session.commit()
+        revoke_task(str(task_id))
+        TaskRecord.update_status(str(task_id), TaskStatus.CANCELED)
 

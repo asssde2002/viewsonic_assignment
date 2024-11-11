@@ -22,4 +22,5 @@ class BaseTask(celery_app.Task):
         task_record = TaskRecord(id=task_id, status=TaskStatus.PENDING, created_at=now, updated_at=now)
         session.add(task_record)
         session.commit()
+        TaskRecord.delete_list_task_records()
         return result
