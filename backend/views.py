@@ -9,14 +9,14 @@ from sqlmodel import Session, select
 
 
 from fastapi_restful.inferring_router import InferringRouter
-from database.utils import get_db
+from database.utils import get_session
 
 task_router = InferringRouter()
 
 
 @cbv(task_router)
 class TaskViewSet:
-    session: Session = Depends(get_db)
+    session: Session = Depends(get_session)
 
     @task_router.get("/", response_model=List[TaskRecord])
     def get_tasks(self):

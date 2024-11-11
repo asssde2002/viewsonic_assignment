@@ -1,7 +1,7 @@
 from celery import Celery
 from kombu import Queue
 from models import TaskStatus, TaskRecord
-from database.utils import get_db
+from database.utils import get_session
 from datetime import datetime
 
 celery_app = Celery("viewsonic")
@@ -17,7 +17,7 @@ class BaseTask(celery_app.Task):
     def apply_async(self, *args, **kwargs):
         result = super().apply_async(*args, **kwargs)
         task_id = result.id
-        session = next(get_db())
+        session = next(get_session())
         now = datetime.utcnow()
         task_record = TaskRecord(id=task_id, status=TaskStatus.PENDING, created_at=now, updated_at=now)
         session.add(task_record)
