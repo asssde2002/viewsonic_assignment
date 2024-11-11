@@ -58,6 +58,10 @@ services:
     depends_on:
       - db
       - rabbitmq
+  
+  redis:
+    image: redis:7.4
+
 
 volumes:
   db_data: {}
