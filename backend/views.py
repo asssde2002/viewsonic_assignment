@@ -8,12 +8,12 @@ from utils import revoke_task
 from sqlmodel import Session, select
 
 
-from fastapi_restful.inferring_router import InferringRouter
+from fastapi import APIRouter
 from database.utils import get_session
 from decorators import RedisCachePollingAPI
 from controllers import ListTaskRecordCacheController
 
-task_router = InferringRouter()
+task_router = APIRouter()
 
 
 @cbv(task_router)
