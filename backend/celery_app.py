@@ -17,7 +17,6 @@ class BaseTask(celery_app.Task):
     def apply_async(self, *args, **kwargs):
         result = super().apply_async(*args, **kwargs)
         task_id = result.id
-        now = datetime.utcnow()
         now = datetime.now(timezone.utc)
         task_record = TaskRecord(id=task_id, status=TaskStatus.PENDING, created_at=now, updated_at=now)
         with get_session() as session:
