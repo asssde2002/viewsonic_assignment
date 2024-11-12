@@ -30,7 +30,9 @@ class TaskViewSet:
 
     @task_router.post("/", status_code=201)
     async def create_task(self, taskrecord: Optional[TaskRecord] = None):
-        do_something.apply_async()
+        task_id = str(uuid.uuid4())
+        await TaskRecord.create(task_id)
+        do_something.apply_async(task_id=task_id)
 
     @task_router.delete("/{task_id}", status_code=204)
     async def delete_task(self, task_id: uuid.UUID):
