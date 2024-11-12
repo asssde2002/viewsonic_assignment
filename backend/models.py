@@ -30,13 +30,13 @@ class TaskRecord(SQLModel, table=True):
     @staticmethod
     def update_status(task_id: str, status: str):
         with Session(sync_engine) as session:
-            session.exec(update(TaskRecord).where(TaskRecord.id == task_id).values(status=status))
+            session.execute(update(TaskRecord).where(TaskRecord.id == task_id).values(status=status))
             session.commit()
         TaskRecord.delete_list_task_records()
 
     @staticmethod
     async def async_update_status(task_id: str, status: str, session):
-        await session.exec(update(TaskRecord).where(TaskRecord.id == task_id).values(status=status))
+        await session.execute(update(TaskRecord).where(TaskRecord.id == task_id).values(status=status))
         await session.commit()
         await TaskRecord.async_delete_list_task_records()
 
