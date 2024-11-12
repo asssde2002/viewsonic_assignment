@@ -1,18 +1,17 @@
 import uuid
-from fastapi import HTTPException, Depends
-from fastapi_restful.cbv import cbv
 from typing import List, Optional
+
+from fastapi import APIRouter, Depends, HTTPException
+from fastapi_restful.cbv import cbv
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlmodel import select
+
+from controllers import ListTaskRecordCacheController
+from database.utils import get_async_session
+from decorators import RedisCachePollingAPI
 from models import TaskRecord, TaskStatus
 from tasks import do_something
 from utils import revoke_task
-from sqlmodel import select
-from sqlalchemy.ext.asyncio import AsyncSession
-
-
-from fastapi import APIRouter
-from database.utils import get_async_session
-from decorators import RedisCachePollingAPI
-from controllers import ListTaskRecordCacheController
 
 task_router = APIRouter()
 
@@ -45,4 +44,3 @@ class TaskViewSet:
 
         revoke_task(str(task_id))
         await TaskRecord.async_update_status(str(task_id), TaskStatus.CANCELED, self.session)
-

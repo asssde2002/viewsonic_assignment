@@ -1,21 +1,22 @@
 import asyncio
-from typing import AsyncGenerator, Callable, Generator
 import os
 import sys
+from typing import AsyncGenerator, Callable, Generator
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 import pytest
 import pytest_asyncio
 from fastapi import FastAPI
-from httpx import AsyncClient, ASGITransport
+from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
 from sqlmodel.ext.asyncio.session import AsyncSession
-from database.constants import ASYNC_TEST_DATABASE_URL
-from celery_app import celery_app
 
+from celery_app import celery_app
+from database.constants import ASYNC_TEST_DATABASE_URL
 
 test_engine = create_async_engine(
     ASYNC_TEST_DATABASE_URL,

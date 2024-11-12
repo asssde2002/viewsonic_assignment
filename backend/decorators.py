@@ -1,7 +1,9 @@
-from celery import current_task
-from models import TaskRecord, TaskStatus
-from controllers import BasePollingAPICacheController
 from functools import wraps
+
+from celery import current_task
+
+from controllers import BasePollingAPICacheController
+from models import TaskRecord, TaskStatus
 
 
 def update_task_record(func):

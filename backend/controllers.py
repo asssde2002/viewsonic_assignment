@@ -1,5 +1,7 @@
 import pickle
+
 from models import TaskRecord
+
 
 class BasePollingAPICacheController:
     def __init__(self, timeout=60):

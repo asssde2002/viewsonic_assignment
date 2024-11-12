@@ -1,9 +1,11 @@
-from sqlmodel import SQLModel, Field, Column, DateTime, update, Session
-from sqlalchemy.ext.asyncio import AsyncSession
 import uuid
-from enum import Enum
 from datetime import datetime, timezone
-from database.utils import async_engine, sync_engine, get_redis_client
+from enum import Enum
+
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlmodel import Column, DateTime, Field, Session, SQLModel, update
+
+from database.utils import async_engine, get_redis_client, sync_engine
 
 
 class TaskStatus(str, Enum):
@@ -15,9 +17,16 @@ class TaskStatus(str, Enum):
 
 class TaskRecord(SQLModel, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
-    status: str = Field(default=TaskStatus.PENDING, )
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), sa_column=Column(DateTime(timezone=True), nullable=False))
-    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), sa_column=Column(DateTime(timezone=True), nullable=False, onupdate=lambda: datetime.now(timezone.utc)))
+    status: str = Field(
+        default=TaskStatus.PENDING,
+    )
+    created_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc), sa_column=Column(DateTime(timezone=True), nullable=False)
+    )
+    updated_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        sa_column=Column(DateTime(timezone=True), nullable=False, onupdate=lambda: datetime.now(timezone.utc)),
+    )
 
     @staticmethod
     async def create(task_id: str, session):
@@ -67,4 +76,3 @@ class TaskRecord(SQLModel, table=True):
         cache_key = TaskRecord.get_cache_key()
         with get_redis_client(async_mode=False) as redis_client:
             redis_client.delete(cache_key)
-

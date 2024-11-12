@@ -1,9 +1,10 @@
-from fastapi import FastAPI
-from views import task_router
-from fastapi.responses import FileResponse
-from fastapi.staticfiles import StaticFiles
 import os
 
+from fastapi import FastAPI
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+
+from views import task_router
 
 app = FastAPI()
 path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

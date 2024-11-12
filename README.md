@@ -9,7 +9,7 @@
 
 # Linter and Formatter
 1. `docker-compose exec web bash -c 'ruff check --config backend/pyproject.toml'`
-2. `docker-compose exec web bash -c 'isort --settings backend/pyproject.toml'`
+2. `docker-compose exec web bash -c 'isort . --settings backend/pyproject.toml'`
 3. `docker-compose exec web bash -c 'ruff format --config backend/pyproject.toml'`
 
 # Migration

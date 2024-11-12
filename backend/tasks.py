@@ -1,5 +1,6 @@
-from celery_app import celery_app
 import time
+
+from celery_app import celery_app
 from decorators import update_task_record
 
 
