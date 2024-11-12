@@ -24,8 +24,8 @@ class TaskViewSet:
     @task_router.get("/", response_model=List[TaskRecord])
     @RedisCachePollingAPI(controller_class=ListTaskRecordCacheController, timeout=60)
     async def get_tasks(self):
-        taskrecords = await self.session.exec(select(TaskRecord).order_by(TaskRecord.created_at))
-        taskrecords = taskrecords.all()
+        taskrecords = await self.session.execute(select(TaskRecord).order_by(TaskRecord.created_at))
+        taskrecords = taskrecords.scalars().all()
         return taskrecords
 
     @task_router.post("/", status_code=201)
@@ -36,8 +36,8 @@ class TaskViewSet:
 
     @task_router.delete("/{task_id}", status_code=204)
     async def delete_task(self, task_id: uuid.UUID):
-        taskrecord = await self.session.exec(select(TaskRecord).where(TaskRecord.id == task_id))
-        taskrecord = taskrecord.first()
+        taskrecord = await self.session.execute(select(TaskRecord).where(TaskRecord.id == task_id))
+        taskrecord = taskrecord.scalars().first()
         if taskrecord is None:
             raise HTTPException(status_code=404, detail=f"Task ({taskrecord.id}) is not found")
         elif taskrecord.status in [TaskStatus.COMPLETED, TaskStatus.CANCELED]:

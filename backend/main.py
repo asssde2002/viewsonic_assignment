@@ -6,10 +6,11 @@ import os
 
 
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="../frontend"), name="static")
+path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+app.mount("/static", StaticFiles(directory=f"{path}/frontend"), name="static")
 app.include_router(task_router, prefix="/tasks")
 
 
 @app.get("/")
 def read_root():
-    return FileResponse(os.path.join("../frontend", "index.html"))
+    return FileResponse(os.path.join(f"{path}/frontend", "index.html"))
