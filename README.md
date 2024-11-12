@@ -8,5 +8,5 @@
 1. `docker-compose exec web bash -c 'pytest backend/tests/tests_views.py --disable-warnings'`
 
 # Migration
-1. `docker-compose exec web bash -c 'alembic revision --autogenerate -m "xxxxxxx"'`
-2. `docker-compose exec web bash -c 'alembic upgrade head'`
+1. `docker-compose exec web bash -c 'cd backend && alembic revision --autogenerate -m "xxxxxxx"'`
+2. `docker-compose exec web bash -c 'cd backend && alembic upgrade head'`
