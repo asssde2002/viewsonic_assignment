@@ -20,26 +20,24 @@ class TaskRecord(SQLModel, table=True):
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), sa_column=Column(DateTime(timezone=True), nullable=False, onupdate=lambda: datetime.now(timezone.utc)))
 
     @staticmethod
-    async def create(task_id: str):
+    async def create(task_id: str, session):
         now = datetime.now(timezone.utc)
         task_record = TaskRecord(id=task_id, status=TaskStatus.PENDING, created_at=now, updated_at=now)
-        async with AsyncSession(async_engine) as session:
-            session.add(task_record)
-            await session.commit()
+        session.add(task_record)
+        await session.commit()
         await TaskRecord.async_delete_list_task_records()
  
     @staticmethod
     def update_status(task_id: str, status: str):
         with Session(sync_engine) as session:
-            session.execute(update(TaskRecord).where(TaskRecord.id == task_id).values(status=status))
+            session.exec(update(TaskRecord).where(TaskRecord.id == task_id).values(status=status))
             session.commit()
         TaskRecord.delete_list_task_records()
 
     @staticmethod
-    async def async_update_status(task_id: str, status: str):
-        async with AsyncSession(async_engine) as session:
-            await session.execute(update(TaskRecord).where(TaskRecord.id == task_id).values(status=status))
-            await session.commit()
+    async def async_update_status(task_id: str, status: str, session):
+        await session.exec(update(TaskRecord).where(TaskRecord.id == task_id).values(status=status))
+        await session.commit()
         await TaskRecord.async_delete_list_task_records()
 
     @staticmethod
