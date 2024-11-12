@@ -8,10 +8,10 @@ class BasePollingAPICacheController:
     def judge_to_use_cache(self):
         raise NotImplementedError
 
-    def get_cache(self):
+    async def get_cache(self):
         raise NotImplementedError
 
-    def save_cache(self, payload):
+    async def save_cache(self, payload):
         raise NotImplementedError
     
 
@@ -19,14 +19,14 @@ class ListTaskRecordCacheController(BasePollingAPICacheController):
     def judge_to_use_cache(self):
         return True
 
-    def get_cache(self):
+    async def get_cache(self):
         payload = None
-        cached_task_records = TaskRecord.get_list_task_records()
+        cached_task_records = await TaskRecord.async_get_list_task_records()
         if cached_task_records:
             payload = pickle.loads(cached_task_records)
 
         return payload
 
-    def save_cache(self, payload):
+    async def save_cache(self, payload):
         cached_task_records = pickle.dumps(payload)
-        TaskRecord.save_list_task_records(cached_task_records, self.timeout)
+        await TaskRecord.async_save_list_task_records(cached_task_records, self.timeout)

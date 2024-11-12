@@ -25,15 +25,15 @@ class RedisCachePollingAPI:
 
     def __call__(self, func):
         @wraps(func)
-        def inner_func(*args, **kwargs):
+        async def wrapper(*args, **kwargs):
             controller = self.controller_class(self.timeout)
             use_cache = controller.judge_to_use_cache()
-            payload = controller.get_cache() if use_cache else None
+            payload = await controller.get_cache() if use_cache else None
             if payload is None:
-                payload = func(*args, **kwargs)
+                payload = await func(*args, **kwargs)
                 if use_cache:
-                    controller.save_cache(payload)
+                    await controller.save_cache(payload)
 
             return payload
 
-        return inner_func
+        return wrapper

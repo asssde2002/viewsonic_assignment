@@ -1,8 +1,9 @@
 from sqlmodel import SQLModel, Field, Column, DateTime, update, Session
+from sqlalchemy.ext.asyncio import AsyncSession
 import uuid
 from enum import Enum
 from datetime import datetime, timezone
-from database.utils import engine, get_redis_client
+from database.utils import async_engine, sync_engine, get_redis_client
 
 
 class TaskStatus(str, Enum):
@@ -20,31 +21,44 @@ class TaskRecord(SQLModel, table=True):
 
     @staticmethod
     def update_status(task_id, status):
-        with Session(engine) as session:
+        with Session(sync_engine) as session:
             session.execute(update(TaskRecord).where(TaskRecord.id == task_id).values(status=status))
             session.commit()
         TaskRecord.delete_list_task_records()
+
+    @staticmethod
+    async def async_update_status(task_id, status):
+        async with AsyncSession(async_engine) as session:
+            await session.execute(update(TaskRecord).where(TaskRecord.id == task_id).values(status=status))
+            await session.commit()
+        await TaskRecord.async_delete_list_task_records()
 
     @staticmethod
     def get_cache_key():
         return "task-records"
 
     @staticmethod
-    def get_list_task_records():
+    async def async_get_list_task_records():
         cache_key = TaskRecord.get_cache_key()
-        with get_redis_client() as redis_client:
-            return redis_client.get(cache_key)
+        async with get_redis_client() as redis_client:
+            return await redis_client.get(cache_key)
         
     @staticmethod
-    def save_list_task_records(task_records, timeout=60):
+    async def async_save_list_task_records(task_records, timeout=60):
         cache_key = TaskRecord.get_cache_key()
-        with get_redis_client() as redis_client:
-            redis_client.set(cache_key, task_records, timeout)
+        async with get_redis_client() as redis_client:
+            await redis_client.set(cache_key, task_records, timeout)
+
+    @staticmethod
+    async def async_delete_list_task_records():
+        cache_key = TaskRecord.get_cache_key()
+        async with get_redis_client() as redis_client:
+            await redis_client.delete(cache_key)
 
     @staticmethod
     def delete_list_task_records():
         cache_key = TaskRecord.get_cache_key()
-        with get_redis_client() as redis_client:
+        with get_redis_client(async_mode=False) as redis_client:
             redis_client.delete(cache_key)
 
         

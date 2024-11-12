@@ -5,11 +5,12 @@ from typing import List, Optional
 from models import TaskRecord, TaskStatus
 from tasks import do_something
 from utils import revoke_task
-from sqlmodel import Session, select
+from sqlmodel import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 
 from fastapi import APIRouter
-from database.utils import get_session
+from database.utils import get_async_session
 from decorators import RedisCachePollingAPI
 from controllers import ListTaskRecordCacheController
 
@@ -18,26 +19,28 @@ task_router = APIRouter()
 
 @cbv(task_router)
 class TaskViewSet:
-    session: Session = Depends(get_session)
+    session: AsyncSession = Depends(get_async_session)
 
     @task_router.get("/", response_model=List[TaskRecord])
     @RedisCachePollingAPI(controller_class=ListTaskRecordCacheController, timeout=60)
-    def get_tasks(self):
-        taskrecords = self.session.execute(select(TaskRecord).order_by(TaskRecord.created_at)).scalars().all()
+    async def get_tasks(self):
+        taskrecords = await self.session.execute(select(TaskRecord).order_by(TaskRecord.created_at))
+        taskrecords = taskrecords.scalars().all()
         return taskrecords
 
     @task_router.post("/", status_code=201)
-    def create_task(self, taskrecord: Optional[TaskRecord] = None):
+    async def create_task(self, taskrecord: Optional[TaskRecord] = None):
         do_something.apply_async()
 
     @task_router.delete("/{task_id}", status_code=204)
-    def delete_task(self, task_id: uuid.UUID):
-        taskrecord = self.session.execute(select(TaskRecord).where(TaskRecord.id == task_id)).scalars().first()
+    async def delete_task(self, task_id: uuid.UUID):
+        taskrecord = await self.session.execute(select(TaskRecord).where(TaskRecord.id == task_id))
+        taskrecord = taskrecord.scalars().first()
         if taskrecord is None:
             raise HTTPException(status_code=404, detail=f"Task ({taskrecord.id}) is not found")
         elif taskrecord.status in [TaskStatus.COMPLETED, TaskStatus.CANCELED]:
             raise HTTPException(status_code=400, detail=f"Task ({taskrecord.id}) cannot be canceled")
         
         revoke_task(str(task_id))
-        TaskRecord.update_status(str(task_id), TaskStatus.CANCELED)
+        await TaskRecord.async_update_status(str(task_id), TaskStatus.CANCELED)
 

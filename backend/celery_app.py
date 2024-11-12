@@ -2,7 +2,7 @@ from celery import Celery
 from kombu import Queue
 from models import TaskStatus, TaskRecord
 from sqlmodel import Session
-from database.utils import engine
+from database.utils import sync_engine
 from datetime import datetime, timezone
 
 celery_app = Celery("viewsonic")
@@ -20,7 +20,7 @@ class BaseTask(celery_app.Task):
         task_id = result.id
         now = datetime.now(timezone.utc)
         task_record = TaskRecord(id=task_id, status=TaskStatus.PENDING, created_at=now, updated_at=now)
-        with Session(engine) as session:
+        with Session(sync_engine) as session:
             session.add(task_record)
             session.commit()
         TaskRecord.delete_list_task_records()

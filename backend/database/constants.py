@@ -3,5 +3,6 @@ from config.utils import get_config
 CONFIG = get_config()
 DATABASES = CONFIG["databases"]
 DATABASE_URL = f"postgresql://{DATABASES["USER"]}:{DATABASES["PASSWORD"]}@{DATABASES["HOST"]}:{DATABASES["PORT"]}/{DATABASES["NAME"]}"
+ASYNC_DATABASE_URL = f"postgresql+asyncpg://{DATABASES["USER"]}:{DATABASES["PASSWORD"]}@{DATABASES["HOST"]}:{DATABASES["PORT"]}/{DATABASES["NAME"]}"
 
 CACHE_LOCATION = CONFIG["cache"]["CACHE_LOCATION"]
