@@ -42,7 +42,7 @@ class TaskViewSet:
             raise HTTPException(status_code=404, detail=f"Task ({taskrecord.id}) is not found")
         elif taskrecord.status in [TaskStatus.COMPLETED, TaskStatus.CANCELED]:
             raise HTTPException(status_code=400, detail=f"Task ({taskrecord.id}) cannot be canceled")
-        
+
         revoke_task(str(task_id))
         await TaskRecord.async_update_status(str(task_id), TaskStatus.CANCELED, self.session)
 

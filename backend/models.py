@@ -26,7 +26,7 @@ class TaskRecord(SQLModel, table=True):
         session.add(task_record)
         await session.commit()
         await TaskRecord.async_delete_list_task_records()
- 
+
     @staticmethod
     def update_status(task_id: str, status: str):
         with Session(sync_engine) as session:
@@ -49,7 +49,7 @@ class TaskRecord(SQLModel, table=True):
         cache_key = TaskRecord.get_cache_key()
         async with get_redis_client() as redis_client:
             return await redis_client.get(cache_key)
-        
+
     @staticmethod
     async def async_save_list_task_records(task_records, timeout=60):
         cache_key = TaskRecord.get_cache_key()
@@ -68,4 +68,3 @@ class TaskRecord(SQLModel, table=True):
         with get_redis_client(async_mode=False) as redis_client:
             redis_client.delete(cache_key)
 
-        

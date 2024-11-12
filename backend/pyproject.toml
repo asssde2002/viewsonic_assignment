@@ -1,0 +1,45 @@
+[tool.ruff]
+include = ["*.py"]
+exclude = ["*frontend/*"]
+line-length = 120
+indent-width = 4
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["B", "E", "F", "W"]
+ignore = [
+    "B007",         # Loop control variable not used within loop body
+    "B904",         # Within an except clause, raise exceptions with raise ... from err or raise ... from None to distinguish them from errors in exception handling
+    "B905",         # `zip()` without an explicit `strict=` parameter
+    "E501",         # Line too long
+    "E722",         # Do not use bare except, specify exception instead
+    "F401",         # Module imported but unused
+    "F403",         # 'from module import *' used; unable to detect undefined names
+    "F405",         # Name may be undefined, or defined from star imports: module
+    "F541",         # f-string without any placeholders
+    "F841",         # Local variable name is assigned to but never used
+]
+fixable = ["ALL"]
+unfixable = []
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+preview = true
+docstring-code-format = false
+docstring-code-line-length = "dynamic"
+
+[tool.isort]
+profile = "black"
+extend_skip = [".md", ".json"]
+extend_skip_glob = ["frontend/*"]
+multi_line_output = 3
+use_parentheses = true
+force_grid_wrap = 0
+line_length = 120
+wrap_length = 120
+ensure_newline_before_comments = true
+py_version=312

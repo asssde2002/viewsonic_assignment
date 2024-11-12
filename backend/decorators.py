@@ -12,7 +12,7 @@ def update_task_record(func):
         result = func(*args, **kwargs)
         TaskRecord.update_status(task_id, TaskStatus.COMPLETED)
         return result
-    
+
     return wrapper
 
 

@@ -1,7 +1,7 @@
 """Create TaskRecord Model
 
 Revision ID: e29581e74c75
-Revises: 
+Revises:
 Create Date: 2024-11-08 13:00:10.007637
 
 """

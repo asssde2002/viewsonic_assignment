@@ -7,7 +7,7 @@ from sqlmodel import select
 
 
 TEST_CACHE_LOCATION = "redis://redis:6379/2"
-    
+
 def mock_judge_to_use_cache(*args, **kwargs):
     return False
 
@@ -16,12 +16,12 @@ def mock_judge_to_use_cache(*args, **kwargs):
 async def test_create_task(mock_sleep, async_client, test_session):
     response = await async_client.post("/tasks/")
     assert response.status_code == 201
-    
+
     tasks = await test_session.exec(select(TaskRecord))
     tasks = tasks.all()
     assert len(tasks) == 1
     assert tasks[0].status == TaskStatus.PENDING
-    assert mock_sleep.called == True
+    assert mock_sleep.called
 
 @pytest.mark.asyncio
 @patch("controllers.ListTaskRecordCacheController.judge_to_use_cache", new=mock_judge_to_use_cache)
@@ -43,10 +43,10 @@ async def test_get_tasks_without_cache(async_client, test_session):
     )
     test_session.add_all([tr1, tr2])
     await test_session.commit()
-    
+
     response = await async_client.get("/tasks/")
     assert response.status_code == 200
-    
+
     tasks = response.json()
     assert len(tasks) == 2
     assert tasks[0]["id"] == task1_id
@@ -72,10 +72,10 @@ async def test_get_tasks_with_cache(async_client, test_session):
     )
     test_session.add_all([tr1, tr2])
     await test_session.commit()
-    
+
     response = await async_client.get("/tasks/")
     assert response.status_code == 200
-    
+
     tasks = response.json()
     assert len(tasks) == 2
     assert tasks[0]["id"] == task1_id
@@ -96,6 +96,6 @@ async def test_delete_task(async_client, test_session):
 
     response = await async_client.delete(f"/tasks/{task_id}")
     assert response.status_code == 204
-    
+
     updated_task = await test_session.get(TaskRecord, task_id)
     assert updated_task.status == TaskStatus.CANCELED

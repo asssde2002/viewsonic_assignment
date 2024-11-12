@@ -13,7 +13,7 @@ class BasePollingAPICacheController:
 
     async def save_cache(self, payload):
         raise NotImplementedError
-    
+
 
 class ListTaskRecordCacheController(BasePollingAPICacheController):
     def judge_to_use_cache(self):
