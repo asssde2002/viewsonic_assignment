@@ -25,9 +25,6 @@ services:
 
   worker:
     image: viewsonic_image
-    build:
-      context: .
-      dockerfile: ./backend/docker/Dockerfile
     volumes:
       - ./backend:/app/backend
       - ./frontend:/app/frontend
@@ -49,9 +46,6 @@ services:
   
   flower:
     image: viewsonic_image
-    build:
-      context: .
-      dockerfile: ./backend/docker/Dockerfile
     ports:
       - 5555:5555
     command: bash ./backend/docker/run_flower.sh
