@@ -1,8 +1,16 @@
-# viewsonic_assignment
+# Architecture
+![Architecture Preview](architecture.png)
+
+# UI
+![UI Preview](ui.png)
+
 # How to start the services
 1. `docker-compose build --no-cahce`
 2. `docker-compose up`
 3. `open http://localhost:8000`
+
+# flower monitor
+1. `open http://localhost:5555`
 
 # UnitTest
 1. `docker-compose exec web bash -c 'pytest backend/tests/tests_views.py --disable-warnings'`
